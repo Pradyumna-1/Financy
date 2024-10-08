@@ -6,7 +6,9 @@
   --theme: #2970ff;
   --black:#000;
   --white:#fff;
-  --shadow-color:rgba(227,227,227,0.75);
+  --shadow-color:0 0 10px 8px rgba(227, 227, 227, 0.75);
+  
+  /* 0 8px 10px rgba(227,227,227,0.75); */
 
 
   /* line-height: 1.5;
@@ -81,5 +83,5 @@ body {
 }
 
 input{
-  font-family: "Montserrat",sans-serif;
+  font-family: "Monserrat",sans-serif;
 }
