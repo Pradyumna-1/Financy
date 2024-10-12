@@ -24,8 +24,7 @@
 //   );
 // }
 
-// export default Cards;
-import React from "react";
+// export default Cards;import React from "react";
 import { Card, Row } from "antd";
 
 function Cards({
