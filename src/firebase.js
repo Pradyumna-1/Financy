@@ -31,3 +31,9 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 export { db, auth, provider, doc, setDoc };
+
+
+//   apiKey: "AIzaSyDnK7tnw56H3WrkOs3cqntA7J5Grn6yCi8",
+
+
+//   authDomain: "finance-tracker-e4fd8.firebaseapp.com",
