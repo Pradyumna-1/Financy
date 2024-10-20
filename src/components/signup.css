@@ -1,0 +1,106 @@
+* {
+  box-sizing: border-box;
+}
+
+.signup-wrapper {
+  width: 80%; /* Increased width to 80% */
+  max-width: 450px; 
+  height: auto;
+  box-shadow: var(--shadow-color);
+  border-radius: 1rem;
+  padding: 0.5rem 1.5rem;
+  margin: 1rem auto; 
+}
+
+.title {
+  font-weight: 500;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.blue-text{
+  color:var(--theme)
+}
+p {
+  text-align: center;
+  font-weight: 300;
+  font-size: 0.9rem;
+}
+
+.p-login {
+  text-align: center;
+  font-weight: 300;
+  font-size: 0.9rem;
+  color: #666;
+ 
+}
+span{
+  cursor: pointer;
+}
+label {
+  font-size: 0.9rem;
+  margin: 0.5rem 0; 
+}
+
+input {
+  margin: 0.5rem 0; 
+  border-width: 0;
+  border-bottom-width: 1px;
+  width: 100%;
+  padding: 0.5rem 0; /* Keep padding for placeholder gap */
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+input:focus {
+  outline: none;
+  opacity: 1;
+  transition: all 0.2s;
+}
+
+input::placeholder {
+  color: gray;
+}
+
+/* Add margin specifically for the first input (name input) */
+input:first-of-type {
+  margin-bottom: 1rem; /* Adjusted margin for the first input */
+}
+
+.btn, .btn-blue { /* Combine styles for both buttons */
+  color: var(--theme);
+  width: 100%;
+  text-align: center;
+  font-size: 0.9rem; /* Decreased from 1rem to 0.9rem */
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  height: auto !important;
+  margin: 0.5rem 0; /* Uniform margin for buttons */
+}
+
+.btn {
+  background-color: #fff;
+  border: 1px solid var(--theme);
+}
+
+.btn:hover {
+  background-color: var(--theme);
+  color: #fff;
+  transition: all 0.3s;
+}
+
+.btn-blue {
+  background-color: var(--theme);
+  color: #fff;
+  margin: 1rem 0; /* Keep this if you want extra space around the blue button */
+}
+
+.btn-blue:hover {
+  background-color: #fff;
+  color: var(--theme);
+  transition: all 0.3s;
+}

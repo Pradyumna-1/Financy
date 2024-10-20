@@ -1,278 +1,475 @@
-// import React from 'react'
-// import Header from "../components/Header";
-// import SignupSignin from "../components/SignUpSignIn/SignupSignin";
-// import "../App.css";
-// const SignUp = () => {
+// import React, { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { auth, provider, db } from "../firebase";
+// import {
+//   createUserWithEmailAndPassword,
+//   signInWithEmailAndPassword,
+//   signInWithPopup,
+// } from "firebase/auth";
+// import { doc, getDoc, setDoc } from "firebase/firestore";
+// import Header from "./Header";
+// import { toast } from "react-toastify";
+// import "./singup.css";
+
+// const SignUpSignIn = () => {
+//   const [name, setName] = useState("");
+//   const [email, setEmail] = useState("");
+//   const [password, setPassword] = useState("");
+//   const [confirmPassword, setConfirmPassword] = useState("");
+//   const [loading, setLoading] = useState(false);
+//   const [flag, setFlag] = useState(false);
+//   const navigate = useNavigate();
+
+//   const createUserDocument = async (user) => {
+//     setLoading(true);
+//     if (!user) return;
+
+//     const userRef = doc(db, "users", user.uid);
+//     const userData = await getDoc(userRef);
+
+//     if (!userData.exists()) {
+//       const { displayName, email, photoURL } = user;
+//       const createdAt = new Date();
+
+//       try {
+//         await setDoc(userRef, {
+//           name: displayName ? displayName : name,
+//           email,
+//           photoURL: photoURL ? photoURL : "",
+//           createdAt,
+//         });
+//         toast.success("Account Created!");
+//         setLoading(false);
+//       } catch (error) {
+//         toast.error(error.message);
+//         console.error("Error creating user document: ", error);
+//         setLoading(false);
+//       }
+//     }
+//   };
+
+//   const signUpWithEmail = async (e) => {
+//     setLoading(true);
+//     e.preventDefault();
+//     try {
+//       const result = await createUserWithEmailAndPassword(
+//         auth,
+//         email,
+//         password
+//       );
+//       const user = result.user;
+//       await createUserDocument(user);
+//       toast.success("Successfully Signed Up!");
+//       setLoading(false);
+//       navigate("/dashboard");
+//     } catch (error) {
+//       toast.error(error.message);
+//       console.error(
+//         "Error signing up with email and password: ",
+//         error.message
+//       );
+//       setLoading(false);
+//     }
+//   };
+
+//   const signInWithEmail = async (e) => {
+//     setLoading(true);
+//     e.preventDefault();
+//     try {
+//       const result = await signInWithEmailAndPassword(auth, email, password);
+//       const user = result.user;
+//       navigate("/dashboard");
+//       toast.success("Logged In Successfully!");
+//       setLoading(false);
+//     } catch (error) {
+//       toast.error(error.message);
+//       console.error(
+//         "Error signing in with email and password: ",
+//         error.message
+//       );
+//       setLoading(false);
+//     }
+//   };
+
+//   const signInWithGoogle = async () => {
+//     setLoading(true);
+//     try {
+//       const result = await signInWithPopup(auth, provider);
+//       const user = result.user;
+//       await createUserDocument(user);
+//       toast.success("User Authenticated Successfully!");
+//       setLoading(false);
+//       navigate("/dashboard");
+//     } catch (error) {
+//       setLoading(false);
+//       toast.error(error.message);
+//       console.error("Error signing in with Google: ", error.message);
+//     }
+//   };
+
 //   return (
-//     <div>
+//     <>
 //       <Header />
 //       <div className="wrapper">
-//         <SignupSignin></SignupSignin>
+//         {flag ? (
+//           <div className="signup-signin-container">
+//             <h2 style={{ textAlign: "center" }}>
+//               Log In on <span className="blue-text">Financely.</span>
+//             </h2>
+//             <form onSubmit={signUpWithEmail}>
+//               <div className="input-wrapper">
+//                 <p>Email</p>
+//                 <input
+//                   type="email"
+//                   placeholder="JohnDoe@gmail.com"
+//                   value={email}
+//                   onChange={(e) => setEmail(e.target.value)}
+//                 />
+//               </div>
+
+//               <div className="input-wrapper">
+//                 <p>Password</p>
+//                 <input
+//                   type="password"
+//                   placeholder="Example123"
+//                   value={password}
+//                   onChange={(e) => setPassword(e.target.value)}
+//                 />
+//               </div>
+
+//               <button
+//                 disabled={loading}
+//                 className="btn"
+//                 onClick={signInWithEmail}
+//               >
+//                 {loading ? "Loading..." : " Log In with Email and Password"}
+//               </button>
+//             </form>
+//             <p style={{ textAlign: "center", margin: 0 }}>or</p>
+//             <button
+//               disabled={loading}
+//               className="btn btn-blue"
+//               onClick={signInWithGoogle}
+//             >
+//               {loading ? "Loading..." : " Log In with Google"}
+//             </button>
+//             <p
+//               onClick={() => setFlag(!flag)}
+//               style={{
+//                 textAlign: "center",
+//                 marginBottom: 0,
+//                 marginTop: "0.5rem",
+//                 cursor: "pointer",
+//               }}
+//             >
+//               Or Don't Have An Account? Click Here.
+//             </p>
+//           </div>
+//         ) : (
+//           <div className="signup-signin-container">
+//             <h2 style={{ textAlign: "center" }}>
+//               Sign Up on <span className="blue-text">Financely.</span>
+//             </h2>
+//             <form onSubmit={signUpWithEmail}>
+//               <div className="input-wrapper">
+//                 <p>Full Name</p>
+//                 <input
+//                   type="text"
+//                   placeholder="John Doe"
+//                   value={name}
+//                   onChange={(e) => setName(e.target.value)}
+//                 />
+//               </div>
+//               <div className="input-wrapper">
+//                 <p>Email</p>
+//                 <input
+//                   type="email"
+//                   placeholder="JohnDoe@gmail.com"
+//                   value={email}
+//                   onChange={(e) => setEmail(e.target.value)}
+//                 />
+//               </div>
+
+//               <div className="input-wrapper">
+//                 <p>Password</p>
+//                 <input
+//                   type="password"
+//                   placeholder="Example123"
+//                   value={password}
+//                   onChange={(e) => setPassword(e.target.value)}
+//                 />
+//               </div>
+
+//               <div className="input-wrapper">
+//                 <p>Confirm Password</p>
+//                 <input
+//                   type="password"
+//                   placeholder="Example123"
+//                   value={confirmPassword}
+//                   onChange={(e) => setConfirmPassword(e.target.value)}
+//                 />
+//               </div>
+
+//               <button type="submit" className="btn">
+//                 {loading ? "Loading..." : "Sign Up with Email and Password"}
+//               </button>
+//             </form>
+//             <p style={{ textAlign: "center", margin: 0 }}>or</p>
+//             <button
+//               disabled={loading}
+//               className="btn btn-blue"
+//               onClick={signInWithGoogle}
+//             >
+//               {loading ? "Loading..." : "Sign Up with Google"}
+//             </button>
+//             <p
+//               onClick={() => setFlag(!flag)}
+//               style={{
+//                 textAlign: "center",
+//                 marginBottom: 0,
+//                 marginTop: "0.5rem",
+//                 cursor: "pointer",
+//               }}
+//             >
+//               Or Have An Account Already? Click Here
+//             </p>
+//             {/* <button onClick={signInWithEmail}>
+//             Sign In with Email and Password
+//           </button> */}
+//           </div>
+//         )}
 //       </div>
-//     </div>
+//     </>
 //   );
 // };
 
-// export default SignUp
-import React, { useState } from "react";
-// import "./styles.css";
-import Input from "./Input/Input"
-import Button from "./Button/Button";
+// export default SignUpSignIn;
 
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { auth, provider, db } from "../firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
-  GoogleAuthProvider,
 } from "firebase/auth";
-
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { auth, db } from "./../firebase";
+import Header from "./Header";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import "./signup.css"; // Import the CSS file here
 
-function SignupSignin() {
+const SignUpSignIn = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [loginForm, setLoginForm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [flag, setFlag] = useState(false);
   const navigate = useNavigate();
 
-  function signupWithEmail() {
+  const createUserDocument = async (user) => {
     setLoading(true);
-
-    // Authenticate the user or basically create a new account using email and password
-    if (name != "" && email != "" && password != "" && confirmPassword != "") {
-      if (password == confirmPassword) {
-        createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            // Signed up
-            const user = userCredential.user;
-            console.log("user >>", user);
-            toast.success("User Created");
-            setName("");
-            setEmail("");
-            setPassword("");
-            setConfirmPassword("");
-            setLoading(false);
-            createDoc(user);
-            navigate("/dashboard");
-
-            // Create a doc with user id as the following id
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            toast.error(errorMessage);
-            setLoading(false);
-
-            // ..
-          });
-      } else {
-        toast.error("Password miss match   ");
-        setLoading(false);
-      }
-    } else {
-      toast.error("All fields are mandatory");
-      setLoading(false);
-    }
-  }
-
-  // for login
-  function loginUsingEmail() {
-    setloading(true);
-    if (email != "" && password != "") {
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          toast.success("User logged in");
-          console.log(user);
-          setLoading(false);
-          navigate("/dashboard");
-
-          // ...
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          setLoading(false);
-          toast.error(errorMessage);
-        });
-    } else {
-      toast.error("All fields are mandatory!");
-      setLoading(false);
-    }
-  }
-  async function createDoc(user) {
-    // Make sure that the doc with the uid doesn't exist
-    // Create a doc.
-    setLoading(true);
-
     if (!user) return;
 
     const userRef = doc(db, "users", user.uid);
     const userData = await getDoc(userRef);
 
     if (!userData.exists()) {
+      const { displayName, email, photoURL } = user;
+      const createdAt = new Date();
+
       try {
-        await setDoc(doc(db, "users", user.uid), {
-          name: user.displayName ? user.displayName : name,
-          email: user.email,
-          photoURL: user.photoURL ? user.photoURL : "",
-          createdAt: new Date(),
+        await setDoc(userRef, {
+          name: displayName ? displayName : name,
+          email,
+          photoURL: photoURL ? photoURL : "",
+          createdAt,
         });
-        toast.success("Doc created ");
+        toast.success("Account Created!");
         setLoading(false);
-      } catch (e) {
-        toast.error(e.message);
+      } catch (error) {
+        toast.error(error.message);
+        console.error("Error creating user document: ", error);
         setLoading(false);
       }
-    } else {
-      toast.error("Doc already exits");
-      setLoading(false);
     }
-  }
+  };
 
-  // For google popup
-
-  function googleAuth() {
+  const signUpWithEmail = async (e) => {
     setLoading(true);
-    const provider = new GoogleAuthProvider();
+    e.preventDefault();
     try {
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          const credential = GoogleAuthProvider.credentialFromResult(result);
-          const token = credential.accessToken;
-          // The signed-in user info.
-          const user = result.user;
-          // IdP data available using getAdditionalUserInfo(result)
-          createDoc(user);
-          setLoading(false);
-          navigate("/dashboard");
-          toast.success("User authenticated! ");
-        })
-        .catch((error) => {
-          // Handle Errors here.
-          setLoading(false);
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // The email of the user's account used.
-          toast.error(errorMessage);
-        });
-    } catch (e) {
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = result.user;
+      await createUserDocument(user);
+      toast.success("Successfully Signed Up!");
       setLoading(false);
-      toast.error(e.message);
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error(error.message);
+      console.error(
+        "Error signing up with email and password: ",
+        error.message
+      );
+      setLoading(false);
     }
-  }
+  };
+
+  const signInWithEmail = async (e) => {
+    setLoading(true);
+    e.preventDefault();
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const user = result.user;
+      navigate("/dashboard");
+      toast.success("Logged In Successfully!");
+      setLoading(false);
+    } catch (error) {
+      toast.error(error.message);
+      console.error(
+        "Error signing in with email and password: ",
+        error.message
+      );
+      setLoading(false);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    setLoading(true);
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      await createUserDocument(user);
+      toast.success("User Authenticated Successfully!");
+      setLoading(false);
+      navigate("/dashboard");
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.message);
+      console.error("Error signing in with Google: ", error.message);
+    }
+  };
 
   return (
     <>
-      {loginForm ? (
-        <div className="signup-wrapper">
-          <h2 className="title">
-            Sign Up on <span style={{ color: "var(--theme)" }}> Financy.</span>
-          </h2>
-
-          <form action="">
-            <Input
-              type="email"
-              label={"Email"}
-              state={email}
-              setState={setEmail}
-              placeholder={"xyz@gmail.com"}
-            />
-
-            <Input
-              type="password"
-              label={"Password"}
-              state={password}
-              setState={setPassword}
-              placeholder={"XYz@11124##"}
-            />
-
-            <Button
+      <Header />
+      <div className="signup-wrapper">
+        {flag ? (
+          <>
+            <h2 className="title">
+              Log In on <span className="blue-text">Financely.</span>
+            </h2>
+            <form onSubmit={signInWithEmail}>
+              <div className="input-wrapper">
+                <label>Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={"johndoe@gmail.com"}
+                />
+              </div>
+              <div className="input-wrapper">
+                <label>Password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder={"example123"}
+                />
+              </div>
+              <button
+                disabled={loading}
+                onClick={signInWithEmail}
+                className="btn btn-email"
+              >
+                {loading ? "Loading..." : "Log In with Email and Password"}
+              </button>
+            </form>
+            <p className="p-login">or</p>
+            <button
               disabled={loading}
-              text={loading ? "loading...." : "Login using email and password"}
-              onClick={loginUsingEmail}
-            />
-            <p className="p-login">Or</p>
-            <Button
-              onClick={googleAuth}
-              text={loading ? "Loading...." : "Login  using Google"}
-              blue={true}
-            />
-            <p
-              className="p-login"
-              style={{ cursor: "pointer" }}
-              onClick={() => setLoginForm(!loginForm)}
+              onClick={signInWithGoogle}
+              className="btn btn-blue"
             >
-              Don't have an account ? Click here
+              {loading ? "Loading..." : "Log In with Google"}
+            </button>
+            <p className="p-login" onClick={() => setFlag(!flag)}>
+              Or Don't Have An Account?
+              <span style={{ color: "black" }}> Click Here.</span>
             </p>
-          </form>
-        </div>
-      ) : (
-        <div className="signup-wrapper">
-          <h2 className="title">
-            Sign Up on <span style={{ color: "var(--theme)" }}> Financy.</span>
-          </h2>
-
-          <form action="">
-            <Input
-              label={"Full Name"}
-              state={name}
-              setState={setName}
-              placeholder={"John Doe"}
-            />
-            <Input
-              type="email"
-              label={"Email"}
-              state={email}
-              setState={setEmail}
-              placeholder={"xyz@gmail.com"}
-            />
-            <Input
-              type="password"
-              label={"Password"}
-              state={password}
-              setState={setPassword}
-              placeholder={"XYz@11124##"}
-            />
-            <Input
-              type="password"
-              label={"Confirm Password"}
-              state={confirmPassword}
-              setState={setConfirmPassword}
-              placeholder={"XYz@11124##"}
-            />
-            <Button
+          </>
+        ) : (
+          <>
+            <h2 className="title">
+              Sign Up on <span className="blue-text">Financy</span>
+            </h2>
+            <form onSubmit={signUpWithEmail}>
+              <div className="input-wrapper">
+                <label>Full Name</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder={"Enter your full name"}
+                />
+              </div>
+              <div className="input-wrapper">
+                <label>Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={"johndoe@gmail.com"}
+                />
+              </div>
+              <div className="input-wrapper">
+                <label>Password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder={"Example123"}
+                />
+              </div>
+              <div className="input-wrapper">
+                <label>Confirm Password</label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder={"Confirm Password"}
+                />
+              </div>
+              <button
+                disabled={loading}
+                onClick={signUpWithEmail}
+                className="btn btn-email"
+              >
+                {loading ? "Loading..." : "Sign Up with Email and Password"}
+              </button>
+            </form>
+            <p className="p">or</p>
+            <button
               disabled={loading}
-              text={
-                loading ? "loading...." : "Sign up using email and password"
-              }
-              onClick={signupWithEmail}
-            />
-            <p className="p-login">Or</p>
-            <Button
-              onClick={googleAuth}
-              text={loading ? "Loading...." : "Sign up using Google"}
-              blue={true}
-            />
-            <p
-              className="p-login"
-              style={{ cursor: "pointer" }}
-              onClick={() => setLoginForm(!loginForm)}
+              onClick={signInWithGoogle}
+              className="btn btn-blue"
             >
-              Or have an account already ? click here
+              {loading ? "Loading..." : "Sign Up with Google"}
+            </button>
+            <p className="p-login" onClick={() => setFlag(!flag)}>
+              Already Have an Account?
+              <span style={{ color: "black" }}> Log In</span>
             </p>
-          </form>
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </>
   );
-}
+};
 
-export default SignupSignin;
+export default SignUpSignIn;
